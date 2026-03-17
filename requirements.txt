@@ -1,0 +1,11 @@
+anthropic>=0.50
+python-dotenv
+geopandas
+rasterio
+shapely
+pandas
+numpy
+requests
+matplotlib
+scipy
+pyproj
