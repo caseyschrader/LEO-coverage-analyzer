@@ -39,14 +39,12 @@ def run_pipeline(
 ):
     """
     Execute the full risk analysis pipeline for a natural language location query.
+    Delegates control to the PipelineOrchestratorAgent which handles errors and retries.
 
     Returns:
         GeoDataFrame with risk scores (also saved to output_dir/risk_scores.csv)
     """
-    from agents.bbox_agent import get_bounding_box
-    from agents.ingester import IngestAgent
-    from agents.risk_analyzer import RiskAnalyzer
-    from agents.reporter import ReporterAgent
+    from agents.pipeline_orchestrator import PipelineOrchestratorAgent
 
     sep = "=" * 60
     print(f"\n{sep}")
@@ -54,33 +52,13 @@ def run_pipeline(
     print(f"  Query : {query}")
     print(f"{sep}\n")
 
-    # ── Stage 1: Resolve bounding box ─────────────────────────────────────────
-    print("[Stage 1/4] Resolving bounding box from query...")
-    bbox = get_bounding_box(query)
-    print(
-        f"  → lat [{bbox['min_lat']:.4f}, {bbox['max_lat']:.4f}]  "
-        f"lon [{bbox['min_lon']:.4f}, {bbox['max_lon']:.4f}]"
+    agent = PipelineOrchestratorAgent(
+        csv_path=csv_path,
+        tcc_path=tcc_path,
+        output_dir=output_dir,
+        opentopo_key=opentopo_key,
     )
-
-    # ── Stage 2: Ingest & validate ────────────────────────────────────────────
-    print("\n[Stage 2/4] Ingesting and validating data...")
-    ingester = IngestAgent(csv_path=csv_path, tcc_path=tcc_path)
-    gdf, data_paths = ingester.run(bbox)
-
-    # ── Stage 3: Risk analysis ────────────────────────────────────────────────
-    print("\n[Stage 3/4] Computing obstruction risk scores...")
-    analyzer = RiskAnalyzer(elevation_api_key=opentopo_key)
-    risk_gdf = analyzer.analyze(gdf, data_paths)
-
-    os.makedirs(output_dir, exist_ok=True)
-    csv_out = os.path.join(output_dir, "risk_scores.csv")
-    risk_gdf.drop(columns="geometry").to_csv(csv_out, index=False)
-    print(f"  → Risk scores saved: {csv_out}")
-
-    # ── Stage 4: Report ───────────────────────────────────────────────────────
-    print("\n[Stage 4/4] Generating stakeholder report and map...")
-    reporter = ReporterAgent()
-    reporter.generate_report(risk_gdf, query, output_dir)
+    risk_gdf = agent.run(query)
 
     print(f"\n{sep}")
     print(f"  Pipeline complete. Outputs in: {output_dir}/")
