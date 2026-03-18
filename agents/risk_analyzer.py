@@ -17,7 +17,7 @@ Risk tiers (score → tier)
   0.30–0.59 → MEDIUM
   ≥ 0.60  → HIGH
 
-TCC score mapping  (0–100 % → 0–1)
+TCC score mapping  (0–100 % → 0–1)  
   0 %   → 0.0   (no canopy, clear sky)
   80 %+ → 1.0   (dense canopy)
 
@@ -39,6 +39,8 @@ from shapely.geometry import Point
 
 from utils.raster import sample_raster_at_points
 
+# These weights are arbitrary and need more consideration.
+
 TCC_WEIGHT = 0.4
 TERRAIN_WEIGHT = 0.2
 BUILDING_WEIGHT = 0.4
@@ -47,12 +49,12 @@ LOW_THRESHOLD = 0.30
 HIGH_THRESHOLD = 0.60
 
 # Search radius for neighboring buildings (meters).
-# 150 m captures tall commercial buildings at meaningful distances —
-# e.g. a 50 m building at 150 m creates ~18° obstruction.
-BUILDING_SEARCH_RADIUS_M = 150
+# 100 m captures tall commercial buildings at meaningful distances.
+# Really this is a magic number that needs more consideration.
+BUILDING_SEARCH_RADIUS_M = 100
 
 # Height assumed for locations with no matching building footprint or height=-1.
-DEFAULT_LOCATION_HEIGHT_M = 20
+DEFAULT_LOCATION_HEIGHT_M = 0
 
 
 def _tcc_score(tcc_pct: float) -> float:

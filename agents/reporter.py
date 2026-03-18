@@ -210,7 +210,7 @@ class ReporterAgent:
         with self.client.messages.stream(
             model="claude-opus-4-6",
             max_tokens=2048,
-            thinking={"type": "adaptive"},
+            thinking={"type": "disabled"},
             messages=[{"role": "user", "content": prompt}],
         ) as stream:
             for text in stream.text_stream:

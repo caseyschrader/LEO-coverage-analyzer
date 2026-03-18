@@ -25,12 +25,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
+path = os.path.dirname(os.path.abspath(__file__))
 
-DEFAULT_CSV       = os.path.join(_HERE, "data", "DATA_CHALLENGE_50.csv")
-DEFAULT_TCC       = os.path.join(_HERE, "data", "nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif")
-DEFAULT_BUILDINGS = os.path.join(_HERE, "data", "nc_buildings.geojson")
-DEFAULT_OUTPUT    = _HERE
+DEFAULT_CSV       = os.path.join(path, "data", "DATA_CHALLENGE_50.csv")
+DEFAULT_TCC       = os.path.join(path, "data", "nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif")
+DEFAULT_BUILDINGS = os.path.join(path, "data", "nc_buildings.geojson")
+DEFAULT_OUTPUT    = path
 
 
 def run_pipeline(
@@ -40,6 +40,7 @@ def run_pipeline(
     buildings_path: str = DEFAULT_BUILDINGS,
     output_dir: str = DEFAULT_OUTPUT,
     opentopo_key: str = None,
+    interactive: bool = True,
 ):
     """
     Execute the full risk analysis pipeline for a natural language location query.
@@ -62,6 +63,7 @@ def run_pipeline(
         buildings_path=buildings_path,
         output_dir=output_dir,
         opentopo_key=opentopo_key,
+        interactive=interactive,
     )
     risk_gdf = agent.run(query)
 
@@ -99,6 +101,11 @@ Examples:
         action="store_true",
         help="Regenerate the map from an existing risk_scores.csv without calling the API",
     )
+    parser.add_argument(
+        "--no-interactive",
+        action="store_true",
+        help="Skip all human review prompts (bbox verification, ingest confirmation, threshold review)",
+    )
 
     args = parser.parse_args()
 
@@ -127,6 +134,7 @@ Examples:
             buildings_path=args.buildings,
             output_dir=args.output,
             opentopo_key=args.opentopo_key,
+            interactive=not args.no_interactive,
         )
 
 

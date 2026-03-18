@@ -49,12 +49,14 @@ class PipelineOrchestratorAgent:
         output_dir: str,
         opentopo_key: str = None,
         buildings_path: str = None,
+        interactive: bool = True,
     ):
         self.csv_path = csv_path
         self.tcc_path = tcc_path
         self.output_dir = output_dir
         self.opentopo_key = opentopo_key
         self.buildings_path = buildings_path
+        self.interactive = interactive
         self.client = anthropic.Anthropic()
 
         # Shared pipeline state written by tools, read by later tools
@@ -163,6 +165,11 @@ class PipelineOrchestratorAgent:
         from agents.bbox_agent import get_bounding_box
 
         self._bbox = get_bounding_box(query)
+
+        if self.interactive:
+            from utils.human_review import confirm_bbox
+            self._bbox = confirm_bbox(self._bbox, self.output_dir)
+
         return {
             "status": "ok",
             "bbox": {k: v for k, v in self._bbox.items() if k != "reasoning"},
@@ -202,6 +209,10 @@ class PipelineOrchestratorAgent:
         )
         self._gdf, self._data_paths = ingester.run(self._bbox)
 
+        if self.interactive:
+            from utils.human_review import confirm_ingest
+            confirm_ingest(len(self._gdf), self._bbox)
+
         return {
             "status": "ok",
             "location_count": len(self._gdf),
@@ -213,10 +224,18 @@ class PipelineOrchestratorAgent:
             return {"error": "No ingested data — call run_ingest first."}
 
         import os
-        from agents.risk_analyzer import RiskAnalyzer
+        from agents.risk_analyzer import LOW_THRESHOLD, HIGH_THRESHOLD, RiskAnalyzer
 
         analyzer = RiskAnalyzer(elevation_api_key=self.opentopo_key)
         self._risk_gdf = analyzer.analyze(self._gdf, self._data_paths)
+
+        if self.interactive:
+            from utils.human_review import review_thresholds, apply_thresholds
+            new_low, new_high = review_thresholds(
+                self._risk_gdf, LOW_THRESHOLD, HIGH_THRESHOLD
+            )
+            if new_low != LOW_THRESHOLD or new_high != HIGH_THRESHOLD:
+                self._risk_gdf = apply_thresholds(self._risk_gdf, new_low, new_high)
 
         os.makedirs(self.output_dir, exist_ok=True)
         csv_out = os.path.join(self.output_dir, "risk_scores.csv")
