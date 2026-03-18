@@ -58,7 +58,7 @@ seasonal canopy variation considerations, etc.
 
 ---
 Keep the tone professional and concise. Avoid unnecessary hedging. \
-The audience is regulatory and engineering staff, not the general public.
+The audience is for broadband providers not the general public.
 Include the map image at the end: ![Risk Map](risk_map.png)
 """
 

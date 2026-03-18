@@ -1,103 +1,102 @@
 ---
-generated: 2026-03-18 10:50
-query: "Risk along Monroe Rd in Indian Trail, North Carolina"
-total_locations: 1400
+generated: 2026-03-18 11:15
+query: "Charlotte, North Carolina"
+total_locations: 382609
 ---
 
-# Satellite Internet Coverage Obstruction Risk Assessment
-## Monroe Road Corridor — Indian Trail, North Carolina
+# Satellite Internet Obstruction Risk Assessment
+## Charlotte, North Carolina
 
-**Prepared for:** Telecommunications Regulatory Filing
-**Corridor:** Monroe Rd, Indian Trail, Union County, NC
-**Bounding Box:** 35.0414°N to 35.0634°N, −80.6668°W to −80.6394°W
-**Locations Assessed:** 1,400
+**Prepared for:** North Carolina Office of Broadband Infrastructure
+**Analysis Area:** 35.0105°N–35.4003°N, 81.0117°W–80.6349°W
+**Locations Assessed:** 382,609
 
 ---
 
 ## Executive Summary
 
-The Monroe Road corridor in Indian Trail, North Carolina presents a **favorable risk profile** for LEO satellite internet service delivery. Of 1,400 assessed locations, 95.1% are classified as low risk for canopy-based signal obstruction, with no locations reaching the high-risk threshold. The corridor's average tree canopy cover of 21.3% is well within acceptable limits for reliable satellite dish installation and operation, though isolated pockets of dense canopy (up to 94.0%) warrant targeted attention during deployment.
+The Charlotte analysis area presents a generally favorable environment for LEO satellite internet deployment, with **80.2% of committed locations classified as low risk** for canopy-related signal obstruction. However, nearly one in five locations (19.7%) falls into the medium-risk category, reflecting the city's substantial urban and suburban tree canopy — a well-documented characteristic of the Charlotte metro. A small but non-trivial set of 435 locations (0.1%) are classified as high risk, with tree canopy cover exceeding 80%, and will likely require targeted intervention to ensure reliable service delivery.
 
 ---
 
 ## Methodology
 
 ### Data Sources
-- **NLCD Tree Canopy Cover (TCC):** USGS National Land Cover Database tree canopy cover layer, providing per-pixel (30 m resolution) estimates of percent tree canopy density. This dataset serves as the primary input for signal obstruction modeling.
-- **Geolocation Data:** Broadband-serviceable location records within the defined bounding box along the Monroe Road corridor.
 
-### Risk Scoring Framework
+- **NLCD Tree Canopy Cover (TCC):** USGS National Land Cover Database, providing per-pixel estimates of tree canopy density at 30-meter resolution. This serves as the primary obstruction proxy.
+- **Location Fabric:** Broadband serviceable location records within the defined bounding box, each geocoded to a rooftop or parcel centroid.
 
-Each location was assigned a risk classification based on local tree canopy cover percentage, which serves as a proxy for potential line-of-sight obstruction to LEO satellite constellations operating at typical elevation angles (25°–55° above horizon):
+### Risk Scoring
 
-| Classification | TCC Threshold | Interpretation |
-|---|---|---|
-| **LOW** | < 40% TCC | Minimal obstruction expected. Standard rooftop or ground-mount installation viable with high confidence. |
-| **MEDIUM** | 40%–69% TCC | Moderate obstruction possible. Site survey recommended; elevated mounts or selective tree trimming may be required. |
-| **HIGH** | ≥ 70% TCC | Significant obstruction likely. Installation feasibility uncertain without intervention (e.g., tree removal, tower-mounted dish, or relocation of terminal). |
+Each location receives a composite risk score (0.0–1.0) derived primarily from the tree canopy cover percentage at and immediately surrounding the location point. The score reflects the likelihood that overhead vegetation will degrade or block the line-of-sight path between a ground-mounted satellite dish and LEO satellites at typical operating elevations (25°–90° above the horizon).
 
-This framework accounts for the wide orbital arc LEO constellations require for continuous handoff between satellites, where even partial canopy coverage can degrade throughput and increase latency variability.
+### Risk Tier Definitions
+
+| Tier | Risk Score | Interpretation |
+|------|-----------|----------------|
+| **LOW** | < 0.4 | Minimal canopy obstruction expected. Standard dish installation on a rooftop or ground mount should maintain reliable connectivity. |
+| **MEDIUM** | 0.4 – 0.7 | Moderate canopy presence. Service may experience intermittent signal degradation, particularly at lower satellite elevation angles. Elevated mounting or selective tree trimming may be warranted. |
+| **HIGH** | > 0.7 | Dense canopy overhead. High probability of persistent signal blockage without mitigation. Professional site survey strongly recommended prior to installation. |
 
 ---
 
 ## Risk Distribution
 
-| Risk Level | Location Count | Percentage |
-|---|---|---|
-| **High** | 0 | 0.0% |
-| **Medium** | 68 | 4.9% |
-| **Low** | 1,332 | 95.1% |
+| Risk Tier | Locations | Percentage |
+|-----------|----------|------------|
+| Low | 306,699 | 80.2% |
+| Medium | 75,475 | 19.7% |
+| High | 435 | 0.1% |
 
-The Monroe Road corridor exhibits a strongly skewed low-risk distribution. The complete absence of high-risk locations is notable and indicates that the corridor does not contain dense, contiguous forest stands of the type that would categorically preclude satellite service.
+The distribution is heavily weighted toward low risk, which is consistent with Charlotte's mix of commercial corridors, newer suburban developments, and open-lot residential neighborhoods where canopy cover is limited or recently established. The **average tree canopy cover across all locations is 31.5%** — moderate, but generally within the operational tolerance of LEO terminals.
 
-The 68 medium-risk locations (4.9%) represent a manageable subset requiring additional deployment consideration but not systematic barriers to service. These locations are likely concentrated in residential parcels with mature lot-tree cover rather than in forested tracts, consistent with the suburban character of Indian Trail.
+The 19.7% medium-risk population (75,475 locations) is the most operationally significant cohort. These locations are concentrated in Charlotte's mature residential neighborhoods — areas such as Myers Park, Dilworth, Plaza Midwood, and portions of east and south Mecklenburg County — where established hardwood canopy (primarily oaks, maples, and tulip poplars) commonly reaches 40–65% overhead coverage. These locations are serviceable but may experience seasonal performance variation.
 
-The average TCC of **21.3%** across the corridor confirms a predominantly open or lightly treed landscape. However, the maximum observed TCC of **94.0%** indicates that at least one location sits within or immediately adjacent to very dense canopy — likely a heavily wooded residential lot or riparian buffer zone.
+The 435 high-risk locations, while a small fraction of the total, represent locations where tree canopy cover reaches **81–98%**, effectively enclosing the site in dense overhead vegetation.
 
 ---
 
 ## Key Findings
 
-1. **Suburban Development Pattern Favors Deployment.** Indian Trail is a rapidly developed suburban community in Union County, southeast of Charlotte. The Monroe Road corridor reflects this character — predominantly residential and commercial land use with fragmented, moderate tree cover rather than contiguous forest. This development pattern is inherently compatible with LEO satellite service.
+1. **Charlotte's "City of Trees" reputation is reflected in the data.** A 31.5% average canopy cover is notably higher than many comparably sized Sun Belt metros, and it drives the relatively large medium-risk population. Charlotte's aggressive urban tree canopy goals and mature Piedmont hardwood forests contribute directly to obstruction risk.
 
-2. **Low Average Canopy, High Local Variance.** The gap between the corridor average (21.3% TCC) and the maximum (94.0% TCC) reveals significant localized variability. This is typical of suburban-transitional landscapes in the North Carolina Piedmont, where individual parcels may retain mature hardwood stands (oak, sweetgum, tulip poplar) even as surrounding areas are cleared for development.
+2. **Terrain is not a significant obstruction factor.** Charlotte sits on the gently rolling Piedmont plateau with elevations ranging from approximately 550 to 830 feet ASL across the study area. There are no ridgelines, deep valleys, or steep grades that would meaningfully compound canopy-based obstruction. The risk profile here is almost entirely vegetation-driven.
 
-3. **No Systematic Obstruction Barriers.** The 0.0% high-risk rate confirms that no cluster of locations along Monroe Road faces categorical service delivery challenges from canopy obstruction. LEO providers committed to serving this corridor face no areas where large-scale infrastructure alternatives (e.g., community Wi-Fi redistribution, tower-mounted terminals) would be necessary.
+3. **Deciduous canopy introduces seasonal variability.** The Charlotte region's dominant tree species are deciduous. Locations in the medium-risk tier (and some high-risk locations) will likely experience measurably better satellite signal quality from November through March when leaf-off conditions reduce effective canopy density by an estimated 30–50%. This means summer months represent the worst-case performance window.
 
-4. **Piedmont Terrain Context.** The bounding box covers gently rolling Piedmont topography with modest elevation variation. Terrain-based obstruction risk is negligible for this corridor; canopy remains the dominant obstruction variable.
+4. **Maximum observed canopy cover reaches 98%.** At least some committed locations are situated beneath near-complete forest canopy — likely in riparian buffers, greenway-adjacent parcels, or heavily wooded estate lots in south Charlotte and the area approaching the Catawba River corridor to the west.
 
-5. **Seasonal Canopy Considerations.** The dominant deciduous hardwood species in this region shed foliage from approximately November through March. Medium-risk locations may experience measurably improved signal quality during winter months, and year-round performance modeling should account for this variance.
+5. **The medium-risk cohort warrants the most attention at scale.** While the 435 high-risk locations can be addressed individually, the 75,475 medium-risk locations represent a systemic challenge. Blanket deployment assumptions may underperform at roughly one-fifth of committed locations without differentiated installation practices.
 
 ---
 
 ## Notable High-Risk Locations
 
-No locations in this corridor met the high-risk classification threshold (≥ 70% TCC). Accordingly, there are no individual high-risk locations to enumerate.
+The following five locations represent the highest obstruction risk scores in the analysis area:
 
-The 68 medium-risk locations, while not individually itemized in this summary, should be flagged in provider deployment databases for pre-installation site survey requirements. These locations are distributed across the corridor and do not form a contiguous cluster that would suggest a single geographic cause (e.g., a park or conservation easement).
+| Rank | Location ID | Latitude | Longitude | Risk Score | Canopy Cover |
+|------|------------|----------|-----------|------------|-------------|
+| 1 | 40686174 | 35.14098 | -80.79728 | 0.807 | 81% |
+| 2 | 40717368 | 35.18353 | -80.69259 | 0.805 | 81% |
+| 3 | 178457710 | 35.21704 | -80.81287 | 0.803 | 85% |
+| 4 | 40267004 | 35.05476 | -80.87367 | 0.801 | 82% |
+| 5 | 40536508 | 35.18827 | -80.79678 | 0.800 | 81% |
+
+**Location 178457710** carries the highest canopy density in the top tier at 85% and is situated in north-central Charlotte near the University City / Mallard Creek area, an area with significant remaining mature tree cover interspersed with suburban development. **Location 40267004**, located in the southwestern portion of the study area near the Steele Creek / Lake Wylie corridor, aligns with known heavily wooded parcels along the Catawba River watershed. The remaining top-five locations are distributed across central and eastern Charlotte in areas consistent with mature residential canopy.
+
+All five locations exceed the 80% canopy threshold and should be considered functionally unserviceable without mitigation.
 
 ---
 
 ## Recommendations
 
-1. **Standard Deployment for Low-Risk Locations (95.1%).** Proceed with standard residential installation protocols — rooftop or ground-level mast mounting — without mandatory pre-installation site surveys. The canopy environment at these locations supports reliable LEO satellite connectivity.
+### For High-Risk Locations (435 locations)
 
-2. **Targeted Site Surveys for Medium-Risk Locations (4.9%).** Conduct field-level obstruction assessments (e.g., Starlink app-based sky visibility scans or equivalent fisheye obstruction analysis) at all 68 medium-risk locations prior to committing installation resources. Evaluate whether:
-   - Repositioning the terminal on the parcel can achieve adequate sky visibility.
-   - Elevated mounting (e.g., J-pole, chimney mount, or short mast) clears the local canopy horizon.
-   - Selective limb trimming by the property owner would resolve marginal obstruction.
+1. **Require professional site surveys** before committing to installation. Remote sensing identifies the risk; on-the-ground assessment determines whether mitigation is viable.
+2. **Evaluate non-standard mounting options**, including extended mast poles (20–40 ft), chimney mounts, or placement on detached structures (garages, outbuildings) with better sky visibility.
+3. **Assess selective vegetation management** in coordination with property owners and local tree ordinances. Charlotte's tree protection ordinances (City Code Chapter 21) may restrict removal of significant trees; trimming within the dish's field-of-view cone may be a more practical path.
+4. **Consider alternative technology** for locations where canopy mitigation is impractical. These locations may be better served by fixed wireless, fiber extension, or hybrid solutions. BEAD challenge processes should account for this possibility.
 
-3. **Monitor Maximum-TCC Outlier Parcels.** Locations approaching or exceeding 90% TCC should be individually reviewed for service feasibility. If these parcels are among the provider's committed service obligations, document any installation constraints for regulatory compliance purposes and consider extended mast or pole-mount solutions (15–25 ft above roofline).
+### For Medium-Risk Locations (75,475 locations)
 
-4. **Account for Seasonal Canopy Variation.** Performance benchmarks and service quality commitments for medium-risk locations should be assessed against summer (full leaf-on) canopy conditions, which represent the worst-case obstruction scenario. Providers should avoid certifying service based solely on winter field surveys.
-
-5. **Maintain Awareness of Growth Trajectory.** Indian Trail and the broader Union County area continue to experience residential development. Canopy cover along Monroe Road may decrease over time as parcels are subdivided and cleared, further reducing obstruction risk. Conversely, newly landscaped developments may introduce future canopy growth on currently low-risk parcels; this effect is marginal within a 5–10 year planning horizon.
-
-6. **Regulatory Documentation.** Given the 0.0% high-risk rate and 95.1% low-risk rate, this corridor is well-suited for inclusion in provider service commitments without caveats related to environmental obstruction. The data supports a determination that LEO satellite service is viable for the full set of 1,400 assessed locations, with routine site-level accommodation required for fewer than 5% of premises.
-
----
-
-*Analysis Date: July 2025*
-*Data Vintage: NLCD 2021 Tree Canopy Cover*
-
-![
+5. **Establish elevated mounting as the default installation standard** for locations with canopy cover above 40%. An
