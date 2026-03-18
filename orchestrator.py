@@ -92,17 +92,40 @@ Examples:
         default=os.environ.get("OPENTOPO_API_KEY"),
         help="OpenTopography API key (enables terrain scoring)",
     )
+    parser.add_argument(
+        "--map-only",
+        action="store_true",
+        help="Regenerate the map from an existing risk_scores.csv without calling the API",
+    )
 
     args = parser.parse_args()
 
-    run_pipeline(
-        query=args.query,
-        csv_path=args.csv,
-        tcc_path=args.tcc,
-        buildings_path=args.buildings,
-        output_dir=args.output,
-        opentopo_key=args.opentopo_key,
-    )
+    if args.map_only:
+        import geopandas as gpd
+        import pandas as pd
+        from agents.reporter import ReporterAgent
+
+        csv_path = os.path.join(args.output, "risk_scores.csv")
+        if not os.path.exists(csv_path):
+            print(f"Error: {csv_path} not found. Run the full pipeline first.")
+            raise SystemExit(1)
+
+        df = pd.read_csv(csv_path)
+        gdf = gpd.GeoDataFrame(
+            df,
+            geometry=gpd.points_from_xy(df["longitude"], df["latitude"]),
+            crs="EPSG:4326",
+        )
+        ReporterAgent().generate_map_only(gdf, args.query, args.output)
+    else:
+        run_pipeline(
+            query=args.query,
+            csv_path=args.csv,
+            tcc_path=args.tcc,
+            buildings_path=args.buildings,
+            output_dir=args.output,
+            opentopo_key=args.opentopo_key,
+        )
 
 
 if __name__ == "__main__":

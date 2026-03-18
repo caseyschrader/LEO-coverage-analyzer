@@ -11,6 +11,7 @@ import os
 from datetime import datetime
 
 import anthropic
+import contextily as ctx
 import geopandas as gpd
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
@@ -23,7 +24,7 @@ RISK_COLORS = {
 }
 
 REPORT_PROMPT = """\
-You are a geospatial analyst writing a professional report for a telecommunications regulatory filing. \
+You are a geospatial analyst writing a professional report for a non-technical state broadband officer. \
 The report assesses satellite internet coverage obstruction risk for LEO (Low Earth Orbit) providers \
 (e.g., Starlink) at locations the providers are committed to serve.
 
@@ -65,6 +66,18 @@ Include the map image at the end: ![Risk Map](risk_map.png)
 class ReporterAgent:
     def __init__(self):
         self.client = anthropic.Anthropic()
+
+    def generate_map_only(
+        self,
+        risk_gdf: gpd.GeoDataFrame,
+        query: str,
+        output_dir: str,
+    ) -> str:
+        """Generate just the risk map without calling the Claude API."""
+        os.makedirs(output_dir, exist_ok=True)
+        map_path = self._generate_map(risk_gdf, query, output_dir)
+        print(f"\n[Reporter] Map → {map_path}")
+        return map_path
 
     def generate_report(
         self,
@@ -149,17 +162,22 @@ class ReporterAgent:
     def _generate_map(
         self, gdf: gpd.GeoDataFrame, query: str, output_dir: str
     ) -> str:
+        # Reproject to Web Mercator so tile basemap aligns correctly
+        gdf_web = gdf.to_crs(epsg=3857)
+
         fig, ax = plt.subplots(figsize=(12, 8))
 
         for tier in ["LOW", "MEDIUM", "HIGH"]:
-            subset = gdf[gdf["risk_tier"] == tier]
+            subset = gdf_web[gdf_web["risk_tier"] == tier]
             if len(subset):
                 subset.plot(
                     ax=ax,
                     color=RISK_COLORS[tier],
                     markersize=6,
-                    alpha=0.75,
+                    alpha=0.85,
                 )
+
+        ctx.add_basemap(ax, source=ctx.providers.CartoDB.Positron, zoom="auto")
 
         legend_patches = [
             mpatches.Patch(color=color, label=f"{tier} ({len(gdf[gdf['risk_tier']==tier])})")
@@ -172,10 +190,7 @@ class ReporterAgent:
             fontsize=11,
             fontweight="bold",
         )
-        ax.set_xlabel("Longitude")
-        ax.set_ylabel("Latitude")
-        ax.grid(True, alpha=0.3, linewidth=0.5)
-
+        ax.set_axis_off()
         plt.tight_layout()
         map_path = os.path.join(output_dir, "risk_map.png")
         plt.savefig(map_path, dpi=150, bbox_inches="tight")
