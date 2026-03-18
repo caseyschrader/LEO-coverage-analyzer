@@ -19,9 +19,10 @@ from utils.raster import get_raster_bounds
 
 
 class IngestAgent:
-    def __init__(self, csv_path: str, tcc_path: str):
+    def __init__(self, csv_path: str, tcc_path: str, buildings_path: str = None):
         self.csv_path = csv_path
         self.tcc_path = tcc_path
+        self.buildings_path = buildings_path
 
     def run(self, bbox: dict) -> tuple:
         """
@@ -48,6 +49,8 @@ class IngestAgent:
         self._validate_tcc_coverage(bbox)
 
         data_paths = {"tcc": self.tcc_path}
+        if self.buildings_path:
+            data_paths["buildings"] = self.buildings_path
         return gdf, data_paths
 
     # ── Private helpers ────────────────────────────────────────────────────────

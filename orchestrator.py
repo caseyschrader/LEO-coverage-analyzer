@@ -25,8 +25,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-DEFAULT_CSV = "/home/kc/Documents/Ready_LEO_Project/DATA_CHALLENGE_50.csv"
-DEFAULT_TCC = "/home/kc/Documents/Ready_LEO_Project/nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif"
+DEFAULT_CSV = "/home/kc/Documents/Ready_LEO_Project/data/building_footprints_US_dataset.csv"
+DEFAULT_TCC = "/home/kc/Documents/Ready_LEO_Project/data/buildings-with-height-coverage.geojson
+DEFAULT_BUILDINGS = "/home/kc/Documents/Ready_LEO_Project/data/nc_buildings.geojson"
 DEFAULT_OUTPUT = "/home/kc/Documents/Ready_LEO_Project/"
 
 
@@ -34,6 +35,7 @@ def run_pipeline(
     query: str,
     csv_path: str = DEFAULT_CSV,
     tcc_path: str = DEFAULT_TCC,
+    buildings_path: str = DEFAULT_BUILDINGS,
     output_dir: str = DEFAULT_OUTPUT,
     opentopo_key: str = None,
 ):
@@ -55,6 +57,7 @@ def run_pipeline(
     agent = PipelineOrchestratorAgent(
         csv_path=csv_path,
         tcc_path=tcc_path,
+        buildings_path=buildings_path,
         output_dir=output_dir,
         opentopo_key=opentopo_key,
     )
@@ -82,6 +85,7 @@ Examples:
     parser.add_argument("query", help="Natural language location query")
     parser.add_argument("--csv", default=DEFAULT_CSV, help="Path to locations CSV")
     parser.add_argument("--tcc", default=DEFAULT_TCC, help="Path to TCC GeoTIFF")
+    parser.add_argument("--buildings", default=DEFAULT_BUILDINGS, help="Path to buildings GeoJSON")
     parser.add_argument("--output", default=DEFAULT_OUTPUT, help="Output directory")
     parser.add_argument(
         "--opentopo-key",
@@ -95,6 +99,7 @@ Examples:
         query=args.query,
         csv_path=args.csv,
         tcc_path=args.tcc,
+        buildings_path=args.buildings,
         output_dir=args.output,
         opentopo_key=args.opentopo_key,
     )

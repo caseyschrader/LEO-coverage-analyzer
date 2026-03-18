@@ -48,11 +48,13 @@ class PipelineOrchestratorAgent:
         tcc_path: str,
         output_dir: str,
         opentopo_key: str = None,
+        buildings_path: str = None,
     ):
         self.csv_path = csv_path
         self.tcc_path = tcc_path
         self.output_dir = output_dir
         self.opentopo_key = opentopo_key
+        self.buildings_path = buildings_path
         self.client = anthropic.Anthropic()
 
         # Shared pipeline state written by tools, read by later tools
@@ -184,7 +186,11 @@ class PipelineOrchestratorAgent:
 
         from agents.ingester import IngestAgent
 
-        ingester = IngestAgent(csv_path=self.csv_path, tcc_path=self.tcc_path)
+        ingester = IngestAgent(
+            csv_path=self.csv_path,
+            tcc_path=self.tcc_path,
+            buildings_path=self.buildings_path,
+        )
         self._gdf, self._data_paths = ingester.run(self._bbox)
 
         return {
