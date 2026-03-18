@@ -9,9 +9,9 @@ Chains four stages:
 
 Usage
 -----
-  python orchestrator.py "Sacramento Valley, California"
-  python orchestrator.py "rural Appalachian Virginia" --output results/va
-  python orchestrator.py "Cascades, Washington" --opentopo-key YOUR_KEY
+  python orchestrator.py "Asheville, North Carolina"
+  python orchestrator.py "Research Triangle, NC" --output results/triangle
+  python orchestrator.py "Outer Banks, NC" --opentopo-key YOUR_KEY
 
 Environment
 -----------
@@ -25,10 +25,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-DEFAULT_CSV = "/home/kc/Documents/Ready_LEO_Project/data/DATA_CHALLENGE_50.csv"
-DEFAULT_TCC = "/home/kc/Documents/Ready_LEO_Project/data/nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif"
-DEFAULT_BUILDINGS = "/home/kc/Documents/Ready_LEO_Project/data/nc_buildings.geojson"
-DEFAULT_OUTPUT = "/home/kc/Documents/Ready_LEO_Project/"
+_HERE = os.path.dirname(os.path.abspath(__file__))
+
+DEFAULT_CSV       = os.path.join(_HERE, "data", "DATA_CHALLENGE_50.csv")
+DEFAULT_TCC       = os.path.join(_HERE, "data", "nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif")
+DEFAULT_BUILDINGS = os.path.join(_HERE, "data", "nc_buildings.geojson")
+DEFAULT_OUTPUT    = _HERE
 
 
 def run_pipeline(
@@ -77,9 +79,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python orchestrator.py "Sacramento Valley, California"
-  python orchestrator.py "rural Appalachian Virginia" --output results/va
-  python orchestrator.py "Cascades, Washington" --opentopo-key YOUR_KEY
+  python orchestrator.py "Asheville, North Carolina"
+  python orchestrator.py "Research Triangle, NC" --output results/triangle
+  python orchestrator.py "Outer Banks, NC" --opentopo-key YOUR_KEY
         """,
     )
     parser.add_argument("query", help="Natural language location query")
