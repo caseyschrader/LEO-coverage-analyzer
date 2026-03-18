@@ -167,7 +167,7 @@ class PipelineOrchestratorAgent:
         self._bbox = get_bounding_box(query)
 
         if self.interactive:
-            from utils.human_review import confirm_bbox
+            from utils.review import confirm_bbox
             self._bbox = confirm_bbox(self._bbox, self.output_dir)
 
         return {
@@ -210,7 +210,7 @@ class PipelineOrchestratorAgent:
         self._gdf, self._data_paths = ingester.run(self._bbox)
 
         if self.interactive:
-            from utils.human_review import confirm_ingest
+            from utils.review import confirm_ingest
             confirm_ingest(len(self._gdf), self._bbox)
 
         return {
@@ -230,7 +230,7 @@ class PipelineOrchestratorAgent:
         self._risk_gdf = analyzer.analyze(self._gdf, self._data_paths)
 
         if self.interactive:
-            from utils.human_review import review_thresholds, apply_thresholds
+            from utils.review import review_thresholds, apply_thresholds
             new_low, new_high = review_thresholds(
                 self._risk_gdf, LOW_THRESHOLD, HIGH_THRESHOLD
             )

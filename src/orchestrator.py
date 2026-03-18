@@ -104,7 +104,7 @@ Examples:
     parser.add_argument(
         "--no-interactive",
         action="store_true",
-        help="Skip all human review prompts (bbox verification, ingest confirmation, threshold review)",
+        help="Skip all user review prompts (bbox verification, ingest confirmation, threshold review)",
     )
 
     args = parser.parse_args()
