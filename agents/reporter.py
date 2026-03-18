@@ -201,6 +201,11 @@ class ReporterAgent:
             for text in stream.text_stream:
                 report_text += text
                 print(text, end="", flush=True)
+            final = stream.get_final_message()
 
         print()  # trailing newline after stream
+        print(
+            f"[Reporter] Usage — input: {final.usage.input_tokens:,} tokens, "
+            f"output: {final.usage.output_tokens:,} tokens"
+        )
         return report_text

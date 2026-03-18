@@ -164,6 +164,8 @@ def get_bounding_box(query: str) -> dict:
 
     bbox_result = None
     reasoning = ""
+    total_input_tokens = 0
+    total_output_tokens = 0
 
     # Agentic loop — runs until Claude stops calling tools
     while True:
@@ -174,6 +176,8 @@ def get_bounding_box(query: str) -> dict:
             tools=TOOLS,
             messages=messages,
         )
+        total_input_tokens += response.usage.input_tokens
+        total_output_tokens += response.usage.output_tokens
 
         # Collect any text / thinking for reasoning
         for block in response.content:
@@ -215,6 +219,11 @@ def get_bounding_box(query: str) -> dict:
             })
 
         messages.append({"role": "user", "content": tool_results})
+
+    print(
+        f"[BBox Agent] Usage — input: {total_input_tokens:,} tokens, "
+        f"output: {total_output_tokens:,} tokens"
+    )
 
     if bbox_result is None:
         raise ValueError(

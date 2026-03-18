@@ -87,6 +87,8 @@ class PipelineOrchestratorAgent:
         ]
 
         # Agentic loop
+        total_input_tokens = 0
+        total_output_tokens = 0
         while True:
             response = self.client.messages.create(
                 model="claude-opus-4-6",
@@ -95,6 +97,8 @@ class PipelineOrchestratorAgent:
                 tools=self._tool_schemas(),
                 messages=messages,
             )
+            total_input_tokens += response.usage.input_tokens
+            total_output_tokens += response.usage.output_tokens
 
             messages.append({"role": "assistant", "content": response.content})
 
@@ -120,6 +124,11 @@ class PipelineOrchestratorAgent:
                 })
 
             messages.append({"role": "user", "content": tool_results})
+
+        print(
+            f"[Orchestrator] Usage — input: {total_input_tokens:,} tokens, "
+            f"output: {total_output_tokens:,} tokens"
+        )
 
         if self._risk_gdf is None:
             raise RuntimeError("Pipeline did not complete — risk scores were not produced.")
