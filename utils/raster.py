@@ -40,15 +40,16 @@ def sample_raster_at_points(raster_path: str, lats: list, lons: list) -> np.ndar
 
 
 def get_raster_bounds(raster_path: str) -> dict:
-    """Return geographic bounds and CRS of a raster."""
+    """Return geographic bounds (EPSG:4326) and CRS of a raster."""
     import rasterio
+    from rasterio.warp import transform_bounds
 
     with rasterio.open(raster_path) as src:
-        b = src.bounds
+        bounds_4326 = transform_bounds(src.crs, "EPSG:4326", *src.bounds)
         return {
-            "min_lon": b.left,
-            "max_lon": b.right,
-            "min_lat": b.bottom,
-            "max_lat": b.top,
+            "min_lon": bounds_4326[0],
+            "min_lat": bounds_4326[1],
+            "max_lon": bounds_4326[2],
+            "max_lat": bounds_4326[3],
             "crs": str(src.crs),
         }

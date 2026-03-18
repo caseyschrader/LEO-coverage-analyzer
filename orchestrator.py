@@ -25,8 +25,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-DEFAULT_CSV = "/home/kc/Documents/Ready_LEO_Project/data/building_footprints_US_dataset.csv"
-DEFAULT_TCC = "/home/kc/Documents/Ready_LEO_Project/data/buildings-with-height-coverage.geojson
+DEFAULT_CSV = "/home/kc/Documents/Ready_LEO_Project/data/DATA_CHALLENGE_50.csv"
+DEFAULT_TCC = "/home/kc/Documents/Ready_LEO_Project/data/nlcd_tcc_conus_wgs84_v2023-5_20230101_20231231.tif"
 DEFAULT_BUILDINGS = "/home/kc/Documents/Ready_LEO_Project/data/nc_buildings.geojson"
 DEFAULT_OUTPUT = "/home/kc/Documents/Ready_LEO_Project/"
 
