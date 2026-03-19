@@ -39,7 +39,7 @@ Write a markdown stakeholder report with these sections:
 2–3 sentences covering the overall risk picture.
 
 ## Methodology
-Brief description: what data sources were used (NLCD Tree Canopy Cover, optionally terrain elevation), \
+Brief description: what data sources were used (NLCD Tree Canopy Cover, terrain elevation, building footprints), \
 how risk was scored, what LOW / MEDIUM / HIGH mean for satellite dish installation.
 
 ## Risk Distribution
