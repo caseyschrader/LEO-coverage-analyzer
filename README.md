@@ -43,7 +43,7 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```
-ANTHROPIC_API_KEY=sk-ant-...
+ANTHROPIC_API_KEY=s\
 OPENTOPO_API_KEY=...          # optional — enables terrain scoring
 ```
 
@@ -147,3 +147,50 @@ utils/
     download_nc_buildings.py Script to download NC building footprints
 data/                        Input data (gitignored)
 ```
+
+## Decision Log
+
+### 1. NLCD Tree Canopy Cover as primary obstruction signal
+
+**Decision:** Use NLCD 2023 Tree Canopy Cover (30m resolution) as the primary and always-available risk factor.
+
+**Alternatives:** Sentinel-2 NDVI, LiDAR-derived canopy height models, Meta/WRI 1m Global Canopy Height Map.
+
+**Reasoning:** NLCD TCC is a purpose-built canopy product covering all of CONUS at consistent resolution, already normalized to 0–100%, and freely available. NDVI captures vegetation broadly but doesn't distinguish canopy height. LiDAR would be more accurate but has no national coverage. The 1m global canopy height map was identified as a higher-resolution alternative but the source data pipeline was not fully resolved within the project timeline.
+
+**What I'd revisit:** TCC lags reality, a location cleared of trees in 2024 may still show high canopy coverage in the 2023. The level of resolution is also not ideal for analyzing indvidual homes' TCC.
+---
+
+### 2. LLM-driven orchestration for pipeline control flow
+
+**Decision:** Use Claude tool-use loop in PipelineOrchestratorAgent to manage stage sequencing and error recovery rather than hardcoded if/else logic.
+
+**Alternatives:** Simple sequential script with try/except blocks, Airflow workflow orchestration.
+
+**Reasoning:** Some recovery decisions are fuzzy for example: how far to expand a bounding box, when to give up vs retry, how to communicate failure clearly to a non-technical user. An agnet handles these judgment calls without requiring every failure mode to be anticipated and hardcoded. For a non-technical user, invisible recovery is preferable to dealing with exceptions.
+
+**What I'd revisit:** The orchestrator adds API cost and latency. In production this could be simplified to deterministic logic once failure modes are well understood.
+
+---
+
+### 3. Microsoft Global Building Footprints for structural obstruction
+
+**Decision:** Use Microsoft Global Building Footprints (ML-estimated heights) as the structural obstruction factor.
+
+**Alternatives:** OpenStreetMap building data (no heights), local government parcel data (inconsistent availability), skip structural obstruction entirely.
+
+**Reasoning:** No comparable free alternative with height estimates exists at national scale for the US. OSM building data lacks height information needed to compute obstruction angles. The MS dataset provides both polygon footprints and ML-estimated heights derived from imagery.
+
+**What I'd revisit:** Height coverage is inconsisent as records have `height == -1` (unknown). The current implementation defaults unknown heights to 0, meaning those buildings contribute nothing to the obstruction score. A better approach might be to estimate height from footprint area or building type where height is missing.
+
+---
+
+### 4. Risk score weights and thresholds
+
+**Decision:** TCC weight 0.40, building weight 0.40, terrain weight 0.20. Thresholds: LOW < 0.30, MEDIUM 0.30–0.59, HIGH ≥ 0.60.
+
+**Alternatives:** Equal weighting across all three factors, data-driven weight derivation from ground truth, single-factor TCC-only model.
+
+**Reasoning:** TCC and buildings were weighted equally as a starting point. Building obstructions are likely more severe than equivalent canopy (no partial transparency) but the dataset has inconsisent height coverage which limits confidence in the building score. Terrain was given lower weight for the NC-focused dataset given the state is not significantly mountainous. Thresholds were set as equal distribution across the 0–1 range, not derived from a physical model of Starlink's actual obstruction tolerance.
+
+**What I'd revisit:** Both the weights and thresholds need field validation against known good and bad installation sites. Expert input from a Starlink field installation team would be needed to set these more accurately. The pipeline sets thresholds as a user-adjustable parameter at runtime for this reason.

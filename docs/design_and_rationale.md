@@ -187,4 +187,3 @@ From the Charlotte, NC analysis (382,609 locations):
 - Maximum observed canopy cover: **98%**
 - The medium-risk population (75,475 locations) is the most operationally significant — these locations are serviceable but may require elevated mounting or seasonal performance management
 - The 435 high-risk locations all exceed 80% canopy cover and should be treated as requiring individual site surveys before installation commitments are made
----
