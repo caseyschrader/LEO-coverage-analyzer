@@ -159,6 +159,7 @@ data/                        Input data (gitignored)
 **Reasoning:** NLCD TCC is a purpose-built canopy product covering all of CONUS at consistent resolution, already normalized to 0–100%, and freely available. NDVI captures vegetation broadly but doesn't distinguish canopy height. LiDAR would be more accurate but has no national coverage. The 1m global canopy height map was identified as a higher-resolution alternative but the source data pipeline was not fully resolved within the project timeline.
 
 **What I'd revisit:** TCC lags reality, a location cleared of trees in 2024 may still show high canopy coverage in the 2023. The level of resolution is also not ideal for analyzing indvidual homes' TCC.
+
 ---
 
 ### 2. LLM-driven orchestration for pipeline control flow
